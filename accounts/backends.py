@@ -12,3 +12,10 @@ class EmailBackend(ModelBackend):
                 return user  # return user to be authenticated
         except user_model.DoesNotExist:  # no matching user exists
             return None
+
+    def get_user(self, user_id):
+        user_model = get_user_model()
+        try:
+            return user_model.objects.get(pk=user_id)
+        except user_model.DoesNotExist:
+            return None
