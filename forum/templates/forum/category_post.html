@@ -1,0 +1,47 @@
+{% extends "forum/base.html" %}
+{% load static %}\
+
+{% block content %}
+    <style>
+        .album {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+    </style>
+    <body>
+    <div class="container-fluid px-4" style="max-width: 1000px;">
+{#        <h1 class="mt-4">{{ category.name }}</h1>#}
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <a class="btn btn-primary float-end" href="#"> Post </a>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Title</th>
+                        <th>Writer</th>
+                        <th>Hits</th>
+                        <th>Post date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td><a> {{ post.id }} </a></td>
+                            <td><a href="#"> {{ post.title }} </a></td>
+                            <td><a> {{ post.writer }} </a></td>
+                            <td><a> 0 </a></td>
+                            <td><a> {{ post.created_at }} </a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}
