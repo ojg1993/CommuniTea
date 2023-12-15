@@ -42,7 +42,7 @@
                            href="{% url 'register' %}">My page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user_login' %}">Logout</a>
+                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user-logout' %}">Logout</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
@@ -50,7 +50,7 @@
                            href="{% url 'register' %}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user_login' %}">Login</a>
+                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user-login' %}">Login</a>
                     </li>
                 {% endif %}
             </ul>
