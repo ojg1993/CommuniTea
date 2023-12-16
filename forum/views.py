@@ -29,3 +29,9 @@ def create_post(request, category_slug=None):
             return redirect(category_posts_url)
     context = {"form": form}
     return render(request, "forum/posts/create_post.html", context=context)
+
+
+def read_post(request, post_id=None):
+    post = Post.objects.get(id=post_id)
+    context = {"post": post}
+    return render(request, "forum/posts/read_post.html", context=context)

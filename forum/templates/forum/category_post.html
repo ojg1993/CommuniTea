@@ -32,7 +32,7 @@
                         {% for post in posts %}
                         <tr>
                             <td><a> {{ post.id }} </a></td>
-                            <td><a href="#"> {{ post.title }} </a></td>
+                            <td><a href="{% url 'read-post' post_id=post.id %}"> {{ post.title }} </a></td>
                             <td><a> {{ post.writer }} </a></td>
                             <td><a> 0 </a></td>
                             <td><a> {{ post.created_at }} </a></td>
