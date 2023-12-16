@@ -5,7 +5,9 @@ from django.urls import reverse
 
 
 def home(request):
-    return render(request, "forum/index.html")
+    latest_posts = Post.objects.all().order_by("-created_at")[:7]
+    context = {"latest_posts": latest_posts}
+    return render(request, "forum/index.html", context=context)
 
 
 def category_posts(request, category_slug=None):
