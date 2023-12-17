@@ -14,4 +14,6 @@ urlpatterns = [
         name="create-post",
     ),
     path("<slug:category_slug>/posts/<int:post_id>", views.post_info, name="post-info"),
+    path("<slug:category_slug>/posts/<int:post_id>/update-post", views.update_post, name="update-post"),
+    path("<slug:category_slug>/posts/<int:post_id>/delete-post", views.delete_post, name="delete-post")
 ]

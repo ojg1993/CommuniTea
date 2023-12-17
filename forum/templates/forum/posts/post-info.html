@@ -8,12 +8,17 @@
             <div class="container" style="width: 600px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                        <button onclick="deletePost(this)" data-post-id="{{ post.id }}" data-category-slug="{{ category_slug }}" type="button" class="btn btn-outline-danger btn-sm">
+                            Delete
+                        </button>
                     </div>
                     <div><h6 style="font-weight: bold; margin: 0;"> {{ post.title }} </h6></div>
                     <div>
-                        <button type="button" class="btn btn-outline-warning btn-sm"> &nbsp;&nbsp; Edit &nbsp;&nbsp;
-                        </button>
+                        <a href="{% url 'update-post' category_slug=post.category.slug post_id=post.id %}">
+                            <button type="button" class="btn btn-outline-warning btn-sm">
+                                &nbsp;&nbsp; Edit&nbsp;&nbsp;
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -84,5 +89,18 @@
         </div>
     </div>
     </body>
+
+    <script>
+        function deletePost(btn) {
+            var delete_confirm = confirm("Are you sure you want to delete the post?");
+            var post_id = btn.getAttribute('data-post-id');
+            var category_slug = btn.getAttribute('data-category-slug');
+            console.log(post_id)
+            if (delete_confirm) {
+                var delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
+                window.location.href = delete_url;
+            }
+        }
+    </script>
 
 {% endblock %}
