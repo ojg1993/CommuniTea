@@ -11,15 +11,15 @@ def home(request):
 
 
 def category_posts(request, category_slug=None):
-    if category_slug not in ['all_post', 'best']:
+    if category_slug not in ['all-post', 'best']:
         category = get_object_or_404(Category, slug=category_slug)
         posts = Post.objects.filter(category=category)
     else:
-        if category_slug == 'all_post':
-            category = None
+        if category_slug == 'all-post':
+            category = 'all-post'
             posts = Post.objects.all()
         elif category_slug == 'best':
-            category = None
+            category = 'best'
             # best posts logic
             posts = Post.objects.all().order_by("-hits")[:50]
 
@@ -43,7 +43,7 @@ def create_post(request, category_slug=None):
     return render(request, "forum/posts/create_post.html", context=context)
 
 
-def read_post(request, post_id=None):
+def read_post(request, category_slug=None, post_id=None):
     post = get_object_or_404(Post, id=post_id)
     context = {"post": post}
     post.increase_hits()

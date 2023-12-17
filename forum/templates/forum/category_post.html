@@ -11,13 +11,14 @@
     </style>
     <body>
     <div class="container-fluid px-4" style="max-width: 1000px;">
-{#        <h1 class="mt-4">{{ category.name }}</h1>#}
+        {#        <h1 class="mt-4">{{ category.name }}</h1>#}
 
         <div class="card mb-4">
             {% if category.slug %}
-            <div class="card-header">
-                <a class="btn btn-primary float-end" href="{% url 'create-post' category_slug=category.slug %}"> Post </a>
-            </div>
+                <div class="card-header">
+                    <a class="btn btn-primary float-end" href="{% url 'create-post' category_slug=category.slug %}">
+                        Post </a>
+                </div>
             {% endif %}
             <div class="card-body">
                 <table class="table table-hover table-striped">
@@ -31,15 +32,25 @@
                     </tr>
                     </thead>
                     <tbody>
-                        {% for post in posts %}
+                    {% for post in posts %}
                         <tr>
                             <td><a> {{ post.id }} </a></td>
-                            <td><a href="{% url 'read-post' post_id=post.id %}"> {{ post.title }} </a></td>
+                            <td>
+                                <a href="
+                                    {% if category.slug %}
+                                        {% url 'read-post' category_slug=category.slug post_id=post.id %}
+                                    {% else %}
+                                        {% url 'read-post' category_slug=post.category.slug post_id=post.id %}
+                                    {% endif %}">
+                                    {{ post.title }}
+                                </a>
+                            </td>
                             <td><a> {{ post.writer }} </a></td>
-                            <td><a> {{ post.hits }} </a></td> {# async process required #}
+                            <td><a> {{ post.hits }} </a></td>
+                            {# async process required #}
                             <td><a> {{ post.created_at }} </a></td>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
