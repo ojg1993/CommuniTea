@@ -11,8 +11,18 @@ def home(request):
 
 
 def category_posts(request, category_slug=None):
-    category = get_object_or_404(Category, slug=category_slug)
-    posts = Post.objects.filter(category=category)
+    if category_slug not in ['all_post', 'best']:
+        category = get_object_or_404(Category, slug=category_slug)
+        posts = Post.objects.filter(category=category)
+    else:
+        if category_slug == 'all_post':
+            category = None
+            posts = Post.objects.all()
+        elif category_slug == 'best':
+            category = None
+            # best posts logic
+            posts = Post.objects.all().order_by("created_at")[:50]
+
     context = {"category": category, "posts": posts}
     return render(request, "forum/category_post.html", context=context)
 

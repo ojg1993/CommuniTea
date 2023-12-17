@@ -14,9 +14,11 @@
 {#        <h1 class="mt-4">{{ category.name }}</h1>#}
 
         <div class="card mb-4">
+            {% if category.slug %}
             <div class="card-header">
                 <a class="btn btn-primary float-end" href="{% url 'create-post' category_slug=category.slug %}"> Post </a>
             </div>
+            {% endif %}
             <div class="card-body">
                 <table class="table table-hover table-striped">
                     <thead>
