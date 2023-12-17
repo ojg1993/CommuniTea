@@ -8,7 +8,9 @@
             <div class="container" style="width: 600px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <button onclick="deletePost(this)" data-post-id="{{ post.id }}" data-category-slug="{{ category_slug }}" type="button" class="btn btn-outline-danger btn-sm">
+                        <button onclick="deletePost(this)" data-post-id="{{ post.id }}"
+                                data-category-slug="{{ category_slug }}" type="button"
+                                class="btn btn-outline-danger btn-sm">
                             Delete
                         </button>
                     </div>
@@ -56,9 +58,15 @@
         <div class="container" style="width: 400px;">
             <div style="display: flex; justify-content: space-evenly">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-secondary btn-sm">Previous post</button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm">Post list</button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm">Next post</button>
+                    <a class="btn btn-outline-secondary btn-sm {% if not has_previous_post %}disabled{% endif %}"  href="{% url 'previous-post' category_slug=category_slug post_id=post.id %}" >
+                        Prev post
+                    </a>
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'category-posts' category_slug=category_slug %}" >
+                        Post list
+                    </a>
+                    <a class="btn btn-outline-secondary btn-sm {% if not has_next_post %}disabled{% endif %}" href="{% url 'next-post' category_slug=category_slug post_id=post.id %}" >
+                        Next post
+                    </a>
                 </div>
             </div>
             <hr style="margin: 10px 0px 0 0; width: 400px;">
@@ -95,12 +103,11 @@
             var delete_confirm = confirm("Are you sure you want to delete the post?");
             var post_id = btn.getAttribute('data-post-id');
             var category_slug = btn.getAttribute('data-category-slug');
-            console.log(post_id)
             if (delete_confirm) {
                 var delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
                 window.location.href = delete_url;
             }
-        }
+        };
     </script>
 
 {% endblock %}
