@@ -1,5 +1,5 @@
 {% extends "forum/base.html" %}
-{% load static %}\
+{% load static %}
 
 {% block content %}
     <style>
@@ -38,9 +38,9 @@
                             <td>
                                 <a href="
                                     {% if category.slug %}
-                                        {% url 'read-post' category_slug=category.slug post_id=post.id %}
+                                        {% url 'post-info' category_slug=category.slug post_id=post.id %}
                                     {% else %}
-                                        {% url 'read-post' category_slug=post.category.slug post_id=post.id %}
+                                        {% url 'post-info' category_slug=post.category.slug post_id=post.id %}
                                     {% endif %}">
                                     {{ post.title }}
                                 </a>

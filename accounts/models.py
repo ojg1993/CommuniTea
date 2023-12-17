@@ -40,3 +40,6 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    def get_email_domain(self):
+        return self.email.split('@')[0]

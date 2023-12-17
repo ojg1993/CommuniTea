@@ -1,0 +1,88 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block content %}
+    <body>
+    <div class="container" style="display: flex; justify-items: auto; max-width: 1000px;">
+        <div>
+            <div class="container" style="width: 600px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                    </div>
+                    <div><h6 style="font-weight: bold; "> {{ post.title }} </h6></div>
+                    <div>
+                        <button type="button" class="btn btn-outline-warning btn-sm"> &nbsp;&nbsp; Edit &nbsp;&nbsp;
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin: 10px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 5px 10px; ">
+                <div style="font-size: xx-small;">
+                    By: {{ post.writer.get_email_domain }}
+                </div>
+
+                <div style="display: flex; font-size: xx-small;">
+                    <div>
+                        hits: {{ post.hits }}
+                        &nbsp; &nbsp; | &nbsp; &nbsp;
+                    </div>
+                    {% if post.modified_at %}
+                        <div>
+                            Edited: {{ post.modified_at|date:"d/m/y" }} {{ post.modified_at|time:"H:i" }}
+                        </div>
+                        &nbsp; &nbsp; | &nbsp; &nbsp;
+                    {% endif %}
+                    Posted: {{ post.created_at|date:"d/m/y" }} {{ post.created_at|time:"H:i" }}
+                </div>
+            </div>
+            <div class="card" style="width: 600px; align-self: center;">
+                <div class="card-body" style="min-height: 600px;">
+                    <p class="card-text">{{ post.content }}</p>
+                </div>
+            </div>
+        </div>
+
+        &nbsp;
+        <hr style="border: 1px solid grey; height: 635px; margin: 40px 0px 10px 10px;">
+        &nbsp;
+
+        <div class="container" style="width: 400px;">
+            <div style="display: flex; justify-content: space-evenly">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Previous post</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Post list</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Next post</button>
+                </div>
+            </div>
+            <hr style="margin: 10px 0px 0 0;">
+
+            <div class="text-center" style="font-size: medium; font-weight: bold; margin-bottom: 5px;">
+                Comment
+            </div>
+
+            <div class="card" style="width: 400px; align-self: center;">
+                <div class="card-body" style="min-height: 600px;">
+                    <ul class="list-group">
+                        <li class="list-group-item">An item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                        <li class="list-group-item">And a 6 one</li>
+                        <li class="list-group-item">And a 7 one</li>
+                        <li class="list-group-item">And a 8 one</li>
+                        <li class="list-group-item">And a 9 one</li>
+                        <li class="list-group-item">And a 10 one</li>
+                        <li class="list-group-item">And a 11 one</li>
+                        <li class="list-group-item">And a 12 one</li>
+                        <li class="list-group-item">And a 13 one</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+{% endblock %}

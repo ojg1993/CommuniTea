@@ -24,7 +24,7 @@ def category_posts(request, category_slug=None):
             posts = Post.objects.all().order_by("-hits")[:50]
 
     context = {"category": category, "posts": posts}
-    return render(request, "forum/category_post.html", context=context)
+    return render(request, "forum/category-posts.html", context=context)
 
 
 def create_post(request, category_slug=None):
@@ -40,11 +40,11 @@ def create_post(request, category_slug=None):
             )
             return redirect(category_posts_url)
     context = {"form": form}
-    return render(request, "forum/posts/create_post.html", context=context)
+    return render(request, "forum/posts/create-post.html", context=context)
 
 
-def read_post(request, category_slug=None, post_id=None):
+def post_info(request, category_slug=None, post_id=None):
     post = get_object_or_404(Post, id=post_id)
-    context = {"post": post}
+    context = {"post": post, "category_slug":category_slug}
     post.increase_hits()
-    return render(request, "forum/posts/read_post.html", context=context)
+    return render(request, "forum/posts/post-info.html", context=context)
