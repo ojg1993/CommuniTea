@@ -21,7 +21,7 @@ def category_posts(request, category_slug=None):
         elif category_slug == 'best':
             category = None
             # best posts logic
-            posts = Post.objects.all().order_by("created_at")[:50]
+            posts = Post.objects.all().order_by("-hits")[:50]
 
     context = {"category": category, "posts": posts}
     return render(request, "forum/category_post.html", context=context)
