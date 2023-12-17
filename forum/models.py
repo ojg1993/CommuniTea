@@ -34,6 +34,11 @@ class Post(models.Model):
     writer = models.ForeignKey(
         CustomUser, related_name="user_post", on_delete=models.CASCADE
     )
+    hits = models.IntegerField(default=0)
+
+    def increase_hits(self):
+        self.hits += 1
+        self.save()
 
     def __str__(self):
         return f"[{str(self.category)}] {self.title}"

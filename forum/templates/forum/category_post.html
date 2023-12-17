@@ -36,7 +36,7 @@
                             <td><a> {{ post.id }} </a></td>
                             <td><a href="{% url 'read-post' post_id=post.id %}"> {{ post.title }} </a></td>
                             <td><a> {{ post.writer }} </a></td>
-                            <td><a> 0 </a></td>
+                            <td><a> {{ post.hits }} </a></td> {# async process required #}
                             <td><a> {{ post.created_at }} </a></td>
                         </tr>
                         {% endfor %}

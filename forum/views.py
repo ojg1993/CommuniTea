@@ -44,6 +44,7 @@ def create_post(request, category_slug=None):
 
 
 def read_post(request, post_id=None):
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     context = {"post": post}
+    post.increase_hits()
     return render(request, "forum/posts/read_post.html", context=context)
