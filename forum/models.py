@@ -47,3 +47,26 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    content = models.TextField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    commenter = models.ForeignKey(
+        CustomUser, related_name="user_comment", on_delete=models.CASCADE
+    )
+    post = models.ForeignKey(
+        Post, related_name="post_comment", on_delete=models.CASCADE
+    )
+
+    def get_username(self):
+        email = self.commenter.email
+        username = email.split("@")[0]
+        return username
+
+    def get_title(self):
+        return self.content[:15] + "  ..."
+
+    def __str__(self):
+        return f"[{self.post.id}, {self.get_username()}] {self.get_title()}"

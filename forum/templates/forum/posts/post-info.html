@@ -1,9 +1,10 @@
 {% extends "forum/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <body>
-    <div class="container" style="display: flex; justify-items: auto; max-width: 1000px;">
+    <div class="container justify-content-center" style="display: flex; justify-items: auto; max-width: 1000px;">
         <div>
             <div class="container" style="width: 600px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -18,7 +19,7 @@
                     <div>
                         <a href="{% url 'update-post' category_slug=post.category.slug post_id=post.id %}">
                             <button type="button" class="btn btn-outline-warning btn-sm">
-                                &nbsp;&nbsp; Edit&nbsp;&nbsp;
+                                &nbsp;&nbsp; Edit&nbsp;&nbsp;&nbsp;
                             </button>
                         </a>
                     </div>
@@ -27,7 +28,7 @@
             <hr style="margin: 10px 0;">
             <div style="display: flex; justify-content: space-between; margin: 5px 10px; ">
                 <div style="font-size: xx-small;">
-                    By: {{ post.writer.get_email_domain }}
+                    by: {{ post.writer.get_email_domain }}
                 </div>
 
                 <div style="display: flex; font-size: xx-small;">
@@ -37,11 +38,11 @@
                     </div>
                     {% if post.modified_at %}
                         <div>
-                            Edited: {{ post.modified_at|date:"d/m/y" }} {{ post.modified_at|time:"H:i" }}
+                            edited: {{ post.modified_at|date:"d/m/y" }} {{ post.modified_at|time:"H:i" }}
                         </div>
                         &nbsp; &nbsp; | &nbsp; &nbsp;
                     {% endif %}
-                    Posted: {{ post.created_at|date:"d/m/y" }} {{ post.created_at|time:"H:i" }}
+                    posted: {{ post.created_at|date:"d/m/y" }} {{ post.created_at|time:"H:i" }}
                 </div>
             </div>
             <div class="card" style="width: 600px; align-self: center;">
@@ -58,13 +59,16 @@
         <div class="container" style="width: 400px;">
             <div style="display: flex; justify-content: space-evenly">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <a class="btn btn-outline-secondary btn-sm {% if not has_previous_post %}disabled{% endif %}"  href="{% url 'previous-post' category_slug=category_slug post_id=post.id %}" >
+                    <a class="btn btn-outline-secondary btn-sm {% if not has_previous_post %}disabled{% endif %}"
+                       href="{% url 'previous-post' category_slug=category_slug post_id=post.id %}">
                         Prev post
                     </a>
-                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'category-posts' category_slug=category_slug %}" >
+                    <a class="btn btn-outline-secondary btn-sm"
+                       href="{% url 'category-posts' category_slug=category_slug %}">
                         Post list
                     </a>
-                    <a class="btn btn-outline-secondary btn-sm {% if not has_next_post %}disabled{% endif %}" href="{% url 'next-post' category_slug=category_slug post_id=post.id %}" >
+                    <a class="btn btn-outline-secondary btn-sm {% if not has_next_post %}disabled{% endif %}"
+                       href="{% url 'next-post' category_slug=category_slug post_id=post.id %}">
                         Next post
                     </a>
                 </div>
@@ -75,39 +79,98 @@
                 Comment
             </div>
 
-            <div class="card" style="width: 400px; align-self: center;">
+            <div class="card" style="width: 400px; max-height: 600px; align-self: center;">
                 <div class="card-body" style="min-height: 600px;">
                     <ul class="list-group">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                        <li class="list-group-item">A fourth item</li>
-                        <li class="list-group-item">And a fifth one</li>
-                        <li class="list-group-item">And a 6 one</li>
-                        <li class="list-group-item">And a 7 one</li>
-                        <li class="list-group-item">And a 8 one</li>
-                        <li class="list-group-item">And a 9 one</li>
-                        <li class="list-group-item">And a 10 one</li>
-                        <li class="list-group-item">And a 11 one</li>
-                        <li class="list-group-item">And a 12 one</li>
-                        <li class="list-group-item">And a 13 one</li>
+                        {% for comment in comment_page %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-8">{{ comment.content }}</div>
+                                    <div class="col-md-4 d-flex justify-content-end">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-outline-danger btn-sm small"
+                                               href="{% url 'delete-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
+                                                d
+                                            </a>
+                                            <a class="btn btn-outline-warning btn-sm small"
+                                               href="{% url 'update-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
+                                                e
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="font-size: 10px;">
+                                    <div class="col-md-4">by: {{ comment.commenter.get_email_domain }}</div>
+                                    <div class="col-md-4">edited: {{ comment.modified_at|date:"d/m/y" }}</div>
+                                    <div class="col-md-4">created: {{ comment.created_at|date:"d/m/y" }}</div>
+                                </div>
+                            </li>
+
+                        {% endfor %}
                     </ul>
+                    <nav style="height: 50px;">
+                        <ul class="pagination justify-content-center" style="padding-top: 10px;">
+                            <li class="page-item">
+                                <a class="page-link {% if comment_page.number == 1 %}disabled{% endif %}"
+                                   href="?page=1"
+                                   aria-label="First">&laquo;</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link {% if not comment_page.has_previous %}disabled{% endif %}"
+                                   href="{% if comment_page.has_previous %}?page={{ comment_page.previous_page_number }}{% endif %}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&lsaquo;</span>
+                                </a>
+                            </li>
+
+                            {% for num in comment_page.paginator.page_range %}
+                                {% if num == comment_page.number %}
+                                    <li class="page-item {% if num == comment_page.number %}active{% endif %}">
+                                        <a class="page-link" style="font-size: 10px; margin-top: 7px;">
+                                            {{ num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" style="font-size: 10px; margin-top: 7px;"
+                                           href="?page={{ num }}">
+                                            {{ num }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            <li class="page-item">
+                                <a class="page-link {% if not comment_page.has_next %}disabled{% endif %}"
+                                   href="{% if comment_page.has_next %}?page={{ comment_page.next_page_number }}{% endif %}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&rsaquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link {% if comment_page.number == comment_page.paginator.num_pages %}disabled{% endif %}"
+                                   href="?page={{ comment_page.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <br>
+                    <div style="max-height: 100px; position: absolute; bottom: 40px;">
+                        <form action="{% url 'create-comment' post_id=post.id category_slug=category_slug %}"
+                              method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-outline-secondary btn-sm"
+                                    style="margin-top: 3px; float: right;">
+                                Comment
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     </body>
-
-    <script>
-        function deletePost(btn) {
-            var delete_confirm = confirm("Are you sure you want to delete the post?");
-            var post_id = btn.getAttribute('data-post-id');
-            var category_slug = btn.getAttribute('data-category-slug');
-            if (delete_confirm) {
-                var delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
-                window.location.href = delete_url;
-            }
-        };
-    </script>
 
 {% endblock %}

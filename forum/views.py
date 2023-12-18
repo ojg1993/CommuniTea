@@ -2,8 +2,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Model & ModelForm
-from .models import Category, Post
-from .forms import CreatePostForm
+from .models import Category, Post, Comment
+from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
 
 # Pagination
@@ -44,7 +44,19 @@ def category_posts(request, category_slug=None):
 def post_info(request, category_slug=None, post_id=None):
     cur_category = Category.objects.get(slug=category_slug)
     post = get_object_or_404(Post, id=post_id)
-    context = {"post": post, "category_slug": category_slug}
+    comments = Comment.objects.filter(post_id=post_id).order_by("-created_at")
+
+    paginated = Paginator(comments, 6)
+    page_number = request.GET.get("page")
+    current_page_number = paginated.get_page(page_number)
+
+    form = CreateCommentForm()
+    context = {
+        "post": post,
+        "category_slug": category_slug,
+        "form": form,
+        "comment_page": current_page_number,
+    }
     if Post.objects.filter(category=cur_category.id, id__lt=post_id):
         context["has_previous_post"] = True
     if Post.objects.filter(category=cur_category.id, id__gt=post_id):
@@ -112,3 +124,35 @@ def next_post(request, category_slug=None, post_id=None):
         .first()
     )
     return redirect("post-info", category_slug=category_slug, post_id=previous_post.id)
+
+
+def create_comment(request, post_id, category_slug):
+    comment_form = CreateCommentForm(request.POST)
+    post = get_object_or_404(Post, id=post_id)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = post
+        comment.commenter = request.user
+        comment.save()
+        return redirect("post-info", category_slug=category_slug, post_id=post_id)
+
+
+def update_comment(request, comment_id, post_id, category_slug):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.method == "POST":
+        form = CreateCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect("post-info", category_slug=category_slug, post_id=post_id)
+
+    form = CreateCommentForm(instance=comment)
+    context = {"form": form, "comment": comment}
+
+    return render(request, "forum/posts/update-comment.html", context=context)
+
+
+def delete_comment(request, comment_id, post_id, category_slug):
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    return redirect("post-info", category_slug=category_slug, post_id=post_id)
