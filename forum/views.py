@@ -1,7 +1,13 @@
+# RESTful API
 from django.shortcuts import render, get_object_or_404, redirect
+
+# Model & ModelForm
 from .models import Category, Post
 from .forms import CreatePostForm
 from django.urls import reverse
+
+# Pagination
+from django.core.paginator import Paginator
 
 
 def home(request):
@@ -11,19 +17,27 @@ def home(request):
 
 
 def category_posts(request, category_slug=None):
-    if category_slug not in ['all-post', 'best']:
+    # Categorised posts
+    if category_slug not in ["all-post", "best"]:
         category = get_object_or_404(Category, slug=category_slug)
         posts = Post.objects.filter(category=category)
-    else:
-        if category_slug == 'all-post':
-            category = 'all-post'
-            posts = Post.objects.all()
-        elif category_slug == 'best':
-            category = 'best'
-            # best posts logic
-            posts = Post.objects.all().order_by("-hits")[:50]
 
-    context = {"category": category, "posts": posts}
+    # Not categorised posts
+    else:
+        if category_slug == "all-post":
+            category = "all-post"
+            posts = Post.objects.all()
+        elif category_slug == "best":
+            category = "best"
+            # best posts logic
+            posts = Post.objects.all().order_by("-hits")[:45]
+
+    # pagination
+    paginated = Paginator(posts, 10)
+    page_number = request.GET.get("page")
+    current_page_number = paginated.get_page(page_number)
+
+    context = {"category": category, "posts": posts, "page": current_page_number}
     return render(request, "forum/category-posts.html", context=context)
 
 
@@ -64,8 +78,10 @@ def update_post(request, post_id=None, category_slug=None):
         if form.is_valid():
             edited_post = form.save(commit=False)
             edited_post.save()
-            post_info_url = reverse("post-info",
-                                    kwargs={"category_slug": edited_post.category.slug, "post_id": post_id})
+            post_info_url = reverse(
+                "post-info",
+                kwargs={"category_slug": edited_post.category.slug, "post_id": post_id},
+            )
             return redirect(post_info_url)
 
     context = {"form": form, "category_slug": category_slug}
@@ -80,11 +96,19 @@ def delete_post(request, post_id=None, category_slug=None):
 
 def previous_post(request, category_slug=None, post_id=None):
     cur_category = Category.objects.get(slug=category_slug)
-    previous_post = Post.objects.filter(category=cur_category.id, id__lt=post_id).order_by("-id").first()
+    previous_post = (
+        Post.objects.filter(category=cur_category.id, id__lt=post_id)
+        .order_by("-id")
+        .first()
+    )
     return redirect("post-info", category_slug=category_slug, post_id=previous_post.id)
 
 
 def next_post(request, category_slug=None, post_id=None):
     cur_category = Category.objects.get(slug=category_slug)
-    previous_post = Post.objects.filter(category=cur_category.id, id__gt=post_id).order_by("id").first()
+    previous_post = (
+        Post.objects.filter(category=cur_category.id, id__gt=post_id)
+        .order_by("id")
+        .first()
+    )
     return redirect("post-info", category_slug=category_slug, post_id=previous_post.id)
