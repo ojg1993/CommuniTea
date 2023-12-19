@@ -124,7 +124,7 @@
                                 </a>
                             </li>
 
-                            {% for num in comment_page.paginator.page_range %}
+                            {% for num in page_range %}
                                 {% if num == comment_page.number %}
                                     <li class="page-item {% if num == comment_page.number %}active{% endif %}">
                                         <a class="page-link" style="font-size: 10px; margin-top: 7px;">

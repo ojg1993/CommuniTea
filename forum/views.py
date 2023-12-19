@@ -7,7 +7,7 @@ from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
 
 # Pagination
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def home(request):
@@ -32,12 +32,35 @@ def category_posts(request, category_slug=None):
             # best posts logic
             posts = Post.objects.all().order_by("-hits")[:45]
 
-    # pagination
-    paginated = Paginator(posts, 10)
+    # Pagination
+    paginated = Paginator(posts, 12)
     page_number = request.GET.get("page")
-    current_page_number = paginated.get_page(page_number)
 
-    context = {"category": category, "posts": posts, "page": current_page_number}
+    # Get current page
+    try:
+        current_page = paginated.page(page_number)
+
+    # If page is not an integer, deliver first page.
+    except PageNotAnInteger:
+        current_page = paginated.page(1)
+
+    # If page is out of range, deliver last page of results.
+    except EmptyPage:
+        current_page = paginated.page(paginated.num_pages)
+
+
+    # Range of pages limiting logic
+    page_numbers_range = 10
+    max_index = len(paginated.page_range)
+
+    start_index = int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    end_index = start_index + page_numbers_range
+    if end_index >= max_index:
+        end_index = max_index
+
+    page_range = paginated.page_range[start_index:end_index]
+
+    context = {"category": category, "posts": posts, "page": current_page, "page_range": page_range}
     return render(request, "forum/category-posts.html", context=context)
 
 
@@ -48,14 +71,33 @@ def post_info(request, category_slug=None, post_id=None):
 
     paginated = Paginator(comments, 6)
     page_number = request.GET.get("page")
-    current_page_number = paginated.get_page(page_number)
+
+    try:
+        current_page = paginated.page(page_number)
+    except PageNotAnInteger:
+        current_page = paginated.page(1)
+    except EmptyPage:
+        current_page = paginated.page(paginated.num_pages)
+
+
+    # Range of pages limiting logic
+    page_numbers_range = 5
+    max_index = len(paginated.page_range)
+
+    start_index = int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    end_index = start_index + page_numbers_range
+    if end_index >= max_index:
+        end_index = max_index
+
+    page_range = paginated.page_range[start_index:end_index]
 
     form = CreateCommentForm()
     context = {
         "post": post,
         "category_slug": category_slug,
         "form": form,
-        "comment_page": current_page_number,
+        "comment_page": current_page,
+        "page_range": page_range
     }
     if Post.objects.filter(category=cur_category.id, id__lt=post_id):
         context["has_previous_post"] = True

@@ -69,7 +69,7 @@
                 </a>
             </li>
 
-            {% for num in page.paginator.page_range %}
+            {% for num in page_range %}
                 {% if num == page.number %}
                     <li class="page-item {% if num == page.number %}active{% endif %}"><a
                             class="page-link">{{ num }}</a></li>
