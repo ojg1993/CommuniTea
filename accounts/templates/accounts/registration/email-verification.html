@@ -1,0 +1,8 @@
+{% autoescape off %}
+    Hi,
+
+    Thank you for registering on our CommuniTea.
+    Please verify your email by clicking the link below.
+
+    https://{{ domain }}{% url "email-verification" uid64=uid token=token%}
+{% endautoescape %}
