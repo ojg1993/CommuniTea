@@ -9,4 +9,4 @@ urlpatterns = [
     path("", include("forum.urls")),
     # accounts app
     path("accounts/", include("accounts.urls")),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

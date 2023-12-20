@@ -23,19 +23,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Internal apps
     "forum",
     "accounts",
-
     # External apps
     "crispy_forms",
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = "accounts.CustomUser"
 AUTHENTICATION_BACKENDS = ["accounts.backends.EmailBackend"]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -103,10 +101,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR/'static'/'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "static" / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -114,9 +112,9 @@ MEDIA_ROOT = BASE_DIR/'static'/'media'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email verification settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = '587'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
 
 # Google mailing app id & password

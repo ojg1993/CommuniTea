@@ -48,19 +48,25 @@ def category_posts(request, category_slug=None):
     except EmptyPage:
         current_page = paginated.page(paginated.num_pages)
 
-
     # Range of pages limiting logic
     page_numbers_range = 10
     max_index = len(paginated.page_range)
 
-    start_index = int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    start_index = (
+        int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    )
     end_index = start_index + page_numbers_range
     if end_index >= max_index:
         end_index = max_index
 
     page_range = paginated.page_range[start_index:end_index]
 
-    context = {"category": category, "posts": posts, "page": current_page, "page_range": page_range}
+    context = {
+        "category": category,
+        "posts": posts,
+        "page": current_page,
+        "page_range": page_range,
+    }
     return render(request, "forum/category-posts.html", context=context)
 
 
@@ -79,12 +85,13 @@ def post_info(request, category_slug=None, post_id=None):
     except EmptyPage:
         current_page = paginated.page(paginated.num_pages)
 
-
     # Range of pages limiting logic
     page_numbers_range = 5
     max_index = len(paginated.page_range)
 
-    start_index = int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    start_index = (
+        int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+    )
     end_index = start_index + page_numbers_range
     if end_index >= max_index:
         end_index = max_index
@@ -97,7 +104,7 @@ def post_info(request, category_slug=None, post_id=None):
         "category_slug": category_slug,
         "form": form,
         "comment_page": current_page,
-        "page_range": page_range
+        "page_range": page_range,
     }
     if Post.objects.filter(category=cur_category.id, id__lt=post_id):
         context["has_previous_post"] = True
