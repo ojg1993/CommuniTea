@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+# Password reset
+from django.contrib.auth import views as auth_view
+
 urlpatterns = [
     # Register
     path("register", views.register, name="register"),
@@ -27,5 +30,38 @@ urlpatterns = [
         "email-verification-failed",
         views.email_verification_failed,
         name="email-verification-failed",
+    ),
+    # Password reset
+    # 1) submit email & send password reset link
+    path(
+        "reset-password",
+        auth_view.PasswordResetView.as_view(
+            template_name="accounts/password/password-reset.html"
+        ),
+        name="reset_password",
+    ),
+    # 2) display success message for a password reset email was sent
+    path(
+        "reset-password-sent",
+        auth_view.PasswordResetDoneView.as_view(
+            template_name="accounts/password/password-reset-sent.html"
+        ),
+        name="password_reset_done",
+    ),
+    # 3) password reset form link
+    path(
+        "reset/<uidb64>/<token>",
+        auth_view.PasswordResetConfirmView.as_view(
+            template_name="accounts/password/password-reset-form.html"
+        ),
+        name="password_reset_confirm",
+    ),
+    # 4) display success message for a password reset was successfully done
+    path(
+        "reset-password-complete",
+        auth_view.PasswordResetCompleteView.as_view(
+            template_name="accounts/password/password-reset-complete.html"
+        ),
+        name="password_reset_complete",
     ),
 ]
