@@ -173,4 +173,17 @@
     </div>
     </body>
 
+    <script>
+        function deletePost(btn) {
+            var delete_confirm = confirm("Are you sure you want to delete the post?");
+            var post_id = btn.getAttribute('data-post-id');
+            var category_slug = btn.getAttribute('data-category-slug');
+            console.log(post_id)
+            if (delete_confirm) {
+                var delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
+                window.location.href = delete_url;
+            }
+        }
+    </script>
+
 {% endblock %}
