@@ -1,0 +1,152 @@
+{% extends "forum/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <style>
+        .edit-item:hover {
+            background-color: orange !important;
+            color: white;
+        }
+
+        .delete-item:hover {
+            background-color: red !important;
+            color: white;
+        }
+    </style>
+    <body>
+    <div class="container text-center" style="margin-top: 0px;">
+        <div class="row align-items-start">
+            <h5 class="col-md-6 offset-md-3">Hello {{ request.user.get_email_domain|capfirst }},</h5>
+            <div class="col-md-2 .offset-md-3 dropdown">
+                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Manage Account
+                </button>
+                <ul class="dropdown-menu text-center">
+                    <li><a class="dropdown-item edit-item" href="#">Edit</a></li>
+                    <li><a class="dropdown-item delete-item" href="#">Delete</a></li>
+                </ul>
+            </div>
+        </div>
+        <h6>Your story matters! brew up your memories and let's sip on the shared stories in CommutiTea.</h6>
+    </div>
+
+
+    <hr style="max-width: 1000px; margin-left: auto; margin-right: auto; margin-bottom: 0px;">
+    <br>
+
+    <div class="container justify-content-center"
+         style="display: flex; justify-items: auto; max-width: 1000px; padding: 0 0;">
+        <div>
+
+            <div class="text-center" style="font-size: medium; font-weight: bold; margin-bottom: 10px;">
+                My posts
+            </div>
+
+            <div class="card" style="width: 500px;">
+                <div class="card-body" style="min-height: 500px;">
+                    {% for post in post_page %}
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="font-size: 10px; color: grey; display: flex;">
+                                <a>
+                                    [{{ post.category }}]
+                                </a>
+                                <a style="margin-left: auto;">
+                                    {{ post.created_at|date:'d/m/Y' }}
+                                </a>
+                            </div>
+                            <a style="font-weight: bold; font-size: 13px; color: black;"
+                               href="{% url 'post-info' category_slug=post.category.slug post_id=post.id %}">
+                                {{ post.title|slice:":35" }}{% if post.title|length > 35 %}...{% endif %}
+                            </a>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        &nbsp;
+        <hr style="border: 1px solid grey; height: 590px; margin: 30px 0px 10px 10px;">
+        &nbsp;
+
+        <div class="container" style="width: 500px;">
+
+            <div class="text-center" style="font-size: medium; font-weight: bold; margin-bottom: 10px;">
+                My comments
+            </div>
+
+            <div class="card" style="width: 500px;">
+                <div class="card-body" style="min-height: 500px;">
+                    {% for comment in comments_page %}
+
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="font-size: 10px; color: grey; display: flex;">
+                                <a>
+                                    [{{ comment.post.category }}]:
+                                    {{ comment.post.title|slice:":20" }}{% if comment.post.title|length > 20 %}
+                                        ...{% endif %}
+                                </a>
+                                <a style="margin-left: auto;">
+                                    {{ comment.created_at|date:'d/m/Y' }}
+                                </a>
+                            </div>
+                            <a style="font-weight: bold; font-size: 13px; color: black"
+                               href="{% url 'post-info' category_slug=comment.post.category.slug post_id=comment.post.id %}">
+                                {{ comment.content|slice:":35" }}{% if comment.title|length > 35 %}...{% endif %}
+                            </a>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav>
+        {% with page=posts_page|default:comments_page %}
+
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link {% if page.number == 1 %}disabled{% endif %}" href="?page=1" aria-label="First">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link {% if not page.has_previous %}disabled{% endif %}"
+                       href="{% if page.has_previous %}?page={{ page.previous_page_number }}{% endif %}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+
+                {% for num in page_range %}
+                    {% if num == page.number %}
+                        <li class="page-item {% if num == page.number %}active{% endif %}"><a
+                                class="page-link">{{ num }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                <li class="page-item">
+                    <a class="page-link {% if not page.has_next %}disabled{% endif %}"
+                       href="{% if page.has_next %}?page={{ page.next_page_number }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link {% if page.number == page.paginator.num_pages %}disabled{% endif %}"
+                       href="?page={{ page.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        {% endwith %}
+
+    </nav>
+
+    </body>
+
+{% endblock %}

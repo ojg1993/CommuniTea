@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
+
+from forum.models import Post, Comment
 from . import forms
 from .models import CustomUser
 
 # Login
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
+
+# My page pagination
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Email verification
 from django.contrib.sites.shortcuts import get_current_site
@@ -64,6 +69,66 @@ def user_login(request):
 def user_logout(request):
     auth.logout(request)
     return redirect("home")
+
+
+def my_page(request):
+    user = request.user
+    posts = Post.objects.filter(writer=user).order_by("-created_at")
+    comments = Comment.objects.filter(commenter=user).order_by("-created_at")
+
+    # Posts pagination
+    posts_paginated = Paginator(posts, 10)
+    posts_page_number = request.GET.get("page")
+    try:
+        posts_current_page = posts_paginated.page(posts_page_number)
+    except PageNotAnInteger:
+        posts_current_page = posts_paginated.page(1)
+    except EmptyPage:
+        posts_current_page = posts_paginated.page(posts_paginated.num_pages)
+
+    # Comments pagination
+    comments_paginated = Paginator(comments, 10)
+    comments_page_number = request.GET.get("page")
+    try:
+        comments_current_page = comments_paginated.page(comments_page_number)
+    except PageNotAnInteger:
+        comments_current_page = comments_paginated.page(1)
+    except EmptyPage:
+        comments_current_page = comments_paginated.page(comments_paginated.num_pages)
+
+    # pagination navigator
+    page_numbers_range = 10
+    if len(posts_paginated.page_range) > len(comments_paginated.page_range):
+        max_index = len(posts_paginated.page_range)
+        start_index = (
+            int((posts_current_page.number - 1) / page_numbers_range)
+            * page_numbers_range
+        )
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            comments_end_index = max_index
+
+        page_range = comments_paginated.page_range[start_index:comments_end_index]
+
+    else:
+        max_index = len(comments_paginated.page_range)
+        start_index = (
+            int((comments_current_page.number - 1) / page_numbers_range)
+            * page_numbers_range
+        )
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            comments_end_index = max_index
+
+        page_range = comments_paginated.page_range[start_index:comments_end_index]
+
+    context = {
+        "post_page": posts_current_page,
+        "comments_page": comments_current_page,
+        "page_range": page_range,
+    }
+
+    return render(request, "accounts/mypage.html", context=context)
 
 
 def email_verification(request, uid64, token):

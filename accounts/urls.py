@@ -5,11 +5,11 @@ from . import views
 from django.contrib.auth import views as auth_view
 
 urlpatterns = [
-    # Register
+    # User
     path("register", views.register, name="register"),
-    # User login/out
     path("user-login", views.user_login, name="user-login"),
     path("user-logout", views.user_logout, name="user-logout"),
+    path("my-page", views.my_page, name="my-page"),
     # Email verification
     path(
         "email-verification/<str:uid64>/<str:token>",
