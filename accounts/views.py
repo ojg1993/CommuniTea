@@ -4,12 +4,17 @@ from forum.models import Post, Comment
 from . import forms
 from .models import CustomUser
 
+# User info change / deletion
+from django.contrib.auth import update_session_auth_hash, logout
+from .forms import PasswordConfirmationForm
+
 # Login
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 
 # My page pagination
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 # Email verification
 from django.contrib.sites.shortcuts import get_current_site
@@ -45,6 +50,33 @@ def register(request):
 
     context = {"form": form}
     return render(request, "accounts/registration/register.html", context=context)
+
+
+def update_user(request):
+    form = forms.RegisterUserForm(instance=request.user)
+
+    if request.method == "POST":
+        form = forms.RegisterUserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, request.user)
+            return redirect("my-page")
+
+    context = {"form": form}
+    return render(request, "accounts/registration/update-user.html", context=context)
+
+
+def delete_user(request):
+    form = PasswordConfirmationForm()
+    if request.method == "POST":
+        password = request.POST.get("password")
+        if request.user.check_password(password):
+            request.user.delete()
+            logout(request)
+            return redirect("home")
+        else:
+            pass
+    return render(request, "accounts/registration/delete-user.html", {"form": form})
 
 
 def user_login(request):

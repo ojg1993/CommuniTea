@@ -30,3 +30,7 @@ class LoginForm(forms.Form):
         required=True,
         widget=forms.PasswordInput(attrs={"class": "form-control"}),
     )
+
+
+class PasswordConfirmationForm(forms.Form):
+    password = forms.CharField(required=True, widget=forms.PasswordInput())
