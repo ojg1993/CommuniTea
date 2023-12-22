@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from forum.models import Post, Comment
@@ -52,6 +53,7 @@ def register(request):
     return render(request, "accounts/registration/register.html", context=context)
 
 
+@login_required(login_url="user-login")
 def update_user(request):
     form = forms.RegisterUserForm(instance=request.user)
 
@@ -66,6 +68,7 @@ def update_user(request):
     return render(request, "accounts/registration/update-user.html", context=context)
 
 
+@login_required(login_url="user-login")
 def delete_user(request):
     form = PasswordConfirmationForm()
     if request.method == "POST":
@@ -98,11 +101,13 @@ def user_login(request):
     return render(request, "accounts/login.html", context=context)
 
 
+@login_required(login_url="user-login")
 def user_logout(request):
     auth.logout(request)
     return redirect("home")
 
 
+@login_required(login_url="user-login")
 def my_page(request):
     user = request.user
     posts = Post.objects.filter(writer=user).order_by("-created_at")

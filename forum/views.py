@@ -1,4 +1,5 @@
 # RESTful API
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Model & ModelForm
@@ -11,7 +12,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def home(request):
-    latest_posts = Post.objects.all().order_by("-created_at")[:7]
+    latest_posts = Post.objects.all().order_by("-created_at")[:10]
     context = {"latest_posts": latest_posts}
     return render(request, "forum/index.html", context=context)
 
@@ -114,6 +115,7 @@ def post_info(request, category_slug=None, post_id=None):
     return render(request, "forum/posts/post-info.html", context=context)
 
 
+@login_required(login_url="user-login")
 def create_post(request, category_slug=None):
     current_category = Category.objects.get(slug=category_slug)
     form = CreatePostForm(category=current_category)
@@ -130,6 +132,7 @@ def create_post(request, category_slug=None):
     return render(request, "forum/posts/create-post.html", context=context)
 
 
+@login_required(login_url="user-login")
 def update_post(request, post_id=None, category_slug=None):
     cur_post = Post.objects.get(id=post_id)
     form = CreatePostForm(instance=cur_post)
@@ -149,6 +152,7 @@ def update_post(request, post_id=None, category_slug=None):
     return render(request, "forum/posts/update-post.html", context=context)
 
 
+@login_required(login_url="user-login")
 def delete_post(request, post_id=None, category_slug=None):
     cur_post = Post.objects.get(id=post_id)
     cur_post.delete()
@@ -175,6 +179,7 @@ def next_post(request, category_slug=None, post_id=None):
     return redirect("post-info", category_slug=category_slug, post_id=previous_post.id)
 
 
+@login_required(login_url="user-login")
 def create_comment(request, post_id, category_slug):
     comment_form = CreateCommentForm(request.POST)
     post = get_object_or_404(Post, id=post_id)
@@ -186,6 +191,7 @@ def create_comment(request, post_id, category_slug):
         return redirect("post-info", category_slug=category_slug, post_id=post_id)
 
 
+@login_required(login_url="user-login")
 def update_comment(request, comment_id, post_id, category_slug):
     comment = get_object_or_404(Comment, id=comment_id)
 
@@ -201,6 +207,7 @@ def update_comment(request, comment_id, post_id, category_slug):
     return render(request, "forum/posts/update-comment.html", context=context)
 
 
+@login_required(login_url="user-login")
 def delete_comment(request, comment_id, post_id, category_slug):
     comment = Comment.objects.get(id=comment_id)
     comment.delete()
