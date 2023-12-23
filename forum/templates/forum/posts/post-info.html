@@ -54,6 +54,27 @@
                 <div class="card-body" style="min-height: 600px;">
                     <p class="card-text">{{ post.content }}</p>
                 </div>
+                <hr>
+                <div class="row" style="justify-content: center;">
+
+                    <a class="col-md-2 btn btn-sm" style="margin-right: 20px;"
+                       href="{% url 'emotion' post_id=post.id category_slug=category_slug like=1 %}">
+                        {% if user_vote_info.has_liked %}
+                            <i class="fa-solid fa-thumbs-up"></i> {{ post.get_like_count }}
+                        {% else %}
+                            <i class="fa-regular fa-thumbs-up"></i> {{ post.get_like_count }}
+                        {% endif %}
+                    </a>
+                    <a class="col-md-2 btn btn-sm" style="margin-left: 20px;"
+                       href="{% url 'emotion' post_id=post.id category_slug=category_slug like=0 %}">
+                        {% if user_vote_info.has_disliked %}
+                        <i class="fa-solid fa-thumbs-down"></i> {{ post.get_dislike_count }}
+                        {% else %}
+                        <i class="fa-regular fa-thumbs-down"></i> {{ post.get_dislike_count }}
+                        {% endif %}
+                    </a>
+                </div>
+                <br>
             </div>
         </div>
 

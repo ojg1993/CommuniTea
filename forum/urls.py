@@ -44,4 +44,10 @@ urlpatterns = [
         views.delete_comment,
         name="delete-comment",
     ),
+    # Emotions
+    path(
+        "<slug:category_slug>/posts/<int:post_id>/<int:like>",
+        views.emotion,
+        name="emotion",
+    ),
 ]

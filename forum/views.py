@@ -1,9 +1,10 @@
 # RESTful API
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Model & ModelForm
-from .models import Category, Post, Comment
+from .models import Category, Post, Comment, Emotion
 from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
 
@@ -30,8 +31,9 @@ def category_posts(request, category_slug=None):
             posts = Post.objects.all()
         elif category_slug == "best":
             category = "best"
-            # best posts logic
-            posts = Post.objects.all().order_by("-hits")[:45]
+            posts = Post.objects.annotate(
+                like_count=Count("post_emotion", filter=Q(post_emotion__like=True))
+            ).order_by("-like_count")[:48]
 
     # Pagination
     paginated = Paginator(posts, 12)
@@ -100,12 +102,19 @@ def post_info(request, category_slug=None, post_id=None):
     page_range = paginated.page_range[start_index:end_index]
 
     form = CreateCommentForm()
+
+    user_vote_info = {
+        "has_liked": post.has_user_liked(expresser=request.user, post=post),
+        "has_disliked": post.has_user_disliked(expresser=request.user, post=post),
+    }
+
     context = {
         "post": post,
         "category_slug": category_slug,
         "form": form,
         "comment_page": current_page,
         "page_range": page_range,
+        "user_vote_info": user_vote_info,
     }
     if Post.objects.filter(category=cur_category.id, id__lt=post_id):
         context["has_previous_post"] = True
@@ -211,4 +220,35 @@ def update_comment(request, comment_id, post_id, category_slug):
 def delete_comment(request, comment_id, post_id, category_slug):
     comment = Comment.objects.get(id=comment_id)
     comment.delete()
+    return redirect("post-info", category_slug=category_slug, post_id=post_id)
+
+
+@login_required(login_url="user-login")
+def emotion(request, post_id, category_slug, like):
+    post = get_object_or_404(Post, id=post_id)
+    emotion, created = Emotion.objects.get_or_create(post=post, expresser=request.user)
+    if not created:
+        if like:
+            if emotion.dislike:
+                emotion.dislike = False
+                emotion.like = True
+                emotion.save()
+            else:
+                emotion.delete()
+        else:
+            if emotion.like:
+                emotion.like = False
+                emotion.dislike = True
+                emotion.save()
+
+            else:
+                emotion.delete()
+
+    else:
+        if like:
+            emotion.like = True
+        else:
+            emotion.dislike = True
+        emotion.save()
+
     return redirect("post-info", category_slug=category_slug, post_id=post_id)
