@@ -64,6 +64,9 @@ class Post(models.Model):
             dislike=True, expresser=expresser, post=post
         ).exists()
 
+    def get_title(self):
+        return self.title[:30] + "..." if len(self.title) > 35 else self.title[:30]
+
 
 class Comment(models.Model):
     content = models.TextField(max_length=250)
