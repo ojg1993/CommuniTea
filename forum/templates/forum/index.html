@@ -13,20 +13,23 @@
     <body>
     <div class="album py-5 bg-light">
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-5 g-3">
                 {% for post in latest_posts %}
                     <div class="col">
                         <div class="card shadow-sm">
-                            <div class="card-body">
-                                <p class="card-text">
-                                    <a class="text-info text-decoration-none" href="{% url 'post-info' category_slug=post.category.slug post_id=post.id %}"> {{ post.title }} </a>
-                                    <a class="text-info text-decoration-none"> {{ post.writer }} </a>
-                                    <a class="text-info text-decoration-none"> {{ post.content }} </a>
-
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5></h5>
+                            <div class="card-body" style="height: 250px;">
+                                <p class="card-text col">
+                                <div class="text-center">
+                                    <a class="text-decoration-none"> {{ post.writer.get_email_domain }} </a><br>
+                                    <a class="text-decoration-none"> hits: {{ post.hits }} </a>/
+                                    <a class="text-decoration-none"> likes: {{ post.get_like_count }} </a>
                                 </div>
+                                <hr>
+                                <div class="row text-center">
+                                    <a class="text-info text-decoration-none"
+                                       href="{% url 'post-info' category_slug=post.category.slug post_id=post.id %}"> {{ post.get_title }} </a>
+                                </div>
+                                </p>
                             </div>
                         </div>
                     </div>

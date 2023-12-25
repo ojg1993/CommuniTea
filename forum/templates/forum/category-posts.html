@@ -44,7 +44,7 @@
                             </td>
                             <td class="col-1"><a> {{ post.writer.get_email_domain }} </a></td>
                             <td class="col-2"><a> {{ post.created_at|date:"d/m/y" }} </a></td>
-                            <td class="col-1"><a> {{ post.get_like }} </a></td>
+                            <td class="col-1"><a> {{ post.get_like_count }} </a></td>
                             <td class="col-1"><a> {{ post.hits }} </a></td>
                         </tr>
                     {% endfor %}

@@ -67,9 +67,6 @@ class Post(models.Model):
     def get_title(self):
         return self.title[:30] + "..." if len(self.title) > 35 else self.title[:30]
 
-    def get_like(self):
-        return Emotion.objects.filter(post=self.id, like=True).count()
-
 
 class Comment(models.Model):
     content = models.TextField(max_length=250)
