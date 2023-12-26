@@ -25,6 +25,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
+# Message
+from django.contrib import messages
+
 
 def register(request):
     form = forms.RegisterUserForm()
@@ -62,6 +65,7 @@ def update_user(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, request.user)
+            messages.info(request, "You have successfully deleted your account")
             return redirect("my-page")
 
     context = {"form": form}
@@ -76,6 +80,7 @@ def delete_user(request):
         if request.user.check_password(password):
             request.user.delete()
             logout(request)
+            messages.error(request, "You have successfully deleted your account")
             return redirect("home")
         else:
             pass
@@ -84,19 +89,24 @@ def delete_user(request):
 
 def user_login(request):
     form = forms.LoginForm()
+
     if request.method == "POST":
         form = forms.LoginForm(request.POST)
+
         if form.is_valid():
             email = request.POST.get("email")
             password = request.POST.get("password")
             user = authenticate(request, email=email, password=password)
-            print(email, password)
 
             if user is not None:
-                auth.login(request, user)
-                return redirect("home")
+                if user.is_active:
+                    auth.login(request, user)
+                    messages.success(request, "Login success")
+                    return redirect("home")
+                else:
+                    messages.info(request, "Please verify your email first")
             else:
-                print("login failed")
+                messages.error(request, "Invalid email or password")
     context = {"form": form}
     return render(request, "accounts/login.html", context=context)
 
@@ -104,6 +114,7 @@ def user_login(request):
 @login_required(login_url="user-login")
 def user_logout(request):
     auth.logout(request)
+    messages.error(request, "Logout success")
     return redirect("home")
 
 

@@ -17,7 +17,7 @@
     <body>
     <div class="container text-center" style="margin-top: 0px;">
         <div class="row align-items-start">
-            <h5 class="col-md-6 offset-md-3">Hello {{ request.user.get_email_domain|capfirst }},</h5>
+            <h5 class="col-md-6 offset-md-3">Hello {{ request.user.first_name|capfirst }},</h5>
             <div class="col-md-2 .offset-md-3 dropdown">
                 <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">

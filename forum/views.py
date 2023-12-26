@@ -11,6 +11,9 @@ from django.urls import reverse
 # Pagination
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+# Message
+from django.contrib import messages
+
 
 def home(request):
     latest_posts = Post.objects.all().order_by("-created_at")[:10]
@@ -78,7 +81,7 @@ def post_info(request, category_slug=None, post_id=None):
     post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("-created_at")
 
-    paginated = Paginator(comments, 6)
+    paginated = Paginator(comments, 7)
     page_number = request.GET.get("page")
 
     try:
@@ -103,10 +106,13 @@ def post_info(request, category_slug=None, post_id=None):
 
     form = CreateCommentForm()
 
-    user_vote_info = {
-        "has_liked": post.has_user_liked(expresser=request.user, post=post),
-        "has_disliked": post.has_user_disliked(expresser=request.user, post=post),
-    }
+    if request.user.is_authenticated:
+        user_vote_info = {
+            "has_liked": post.has_user_liked(expresser=request.user, post=post),
+            "has_disliked": post.has_user_disliked(expresser=request.user, post=post),
+        }
+    else:
+        user_vote_info = {"has_liked": False, "has_disliked": False}
 
     context = {
         "post": post,
@@ -136,6 +142,7 @@ def create_post(request, category_slug=None):
             category_posts_url = reverse(
                 "category-posts", kwargs={"category_slug": category_slug}
             )
+            messages.info(request, "Post uploaded successfully")
             return redirect(category_posts_url)
     context = {"form": form}
     return render(request, "forum/posts/create-post.html", context=context)
@@ -155,6 +162,8 @@ def update_post(request, post_id=None, category_slug=None):
                 "post-info",
                 kwargs={"category_slug": edited_post.category.slug, "post_id": post_id},
             )
+            messages.info(request, "Post updated successfully")
+
             return redirect(post_info_url)
 
     context = {"form": form, "category_slug": category_slug}
@@ -165,6 +174,7 @@ def update_post(request, post_id=None, category_slug=None):
 def delete_post(request, post_id=None, category_slug=None):
     cur_post = Post.objects.get(id=post_id)
     cur_post.delete()
+    messages.warning(request, "Post deleted successfully")
     return redirect("category-posts", category_slug=category_slug)
 
 
@@ -197,6 +207,7 @@ def create_comment(request, post_id, category_slug):
         comment.post = post
         comment.commenter = request.user
         comment.save()
+        messages.info(request, "Comment added successfully")
         return redirect("post-info", category_slug=category_slug, post_id=post_id)
 
 
@@ -208,6 +219,7 @@ def update_comment(request, comment_id, post_id, category_slug):
         form = CreateCommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
+            messages.info(request, "Comment updated successfully")
             return redirect("post-info", category_slug=category_slug, post_id=post_id)
 
     form = CreateCommentForm(instance=comment)
@@ -220,6 +232,7 @@ def update_comment(request, comment_id, post_id, category_slug):
 def delete_comment(request, comment_id, post_id, category_slug):
     comment = Comment.objects.get(id=comment_id)
     comment.delete()
+    messages.warning(request, "Comment deleted successfully")
     return redirect("post-info", category_slug=category_slug, post_id=post_id)
 
 

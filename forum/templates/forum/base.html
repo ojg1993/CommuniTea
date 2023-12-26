@@ -16,8 +16,33 @@
 
     <body>
         {% include 'forum/navbar.html' %}
+
         <div class="container">
-            <!-- Notification -->
+            <div style="max-width: 1000px; margin: 0 auto;">
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                        <h6 id="message-timer" class="alert alert-success text-center">
+                            <i class="fa fa-check-circle"></i>
+                            &nbsp; {{ message }} </h6>
+                    {% endif %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                        <h6 id="message-timer" class="alert alert-secondary text-center">
+                            <i class="fa fa-sign-out"></i>
+                            &nbsp; {{ message }} </h6>
+                    {% endif %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <h6 id="message-timer" class="alert alert-danger text-center">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            &nbsp; {{ message }} </h6>
+                    {% endif %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                        <h6 id="message-timer" class="alert alert-info text-center" style="width: 1000px;">
+                            <i class="fa fa-check-circle"></i>
+                            &nbsp; {{ message }} </h6>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
             {% block content %}
 
 

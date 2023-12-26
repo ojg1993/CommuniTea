@@ -20,13 +20,14 @@
                             <div class="card-body" style="height: 250px;">
                                 <p class="card-text col">
                                 <div class="text-center">
+                                    <a class="text-decoration-none"> [{{ post.category }}] </a><br>
                                     <a class="text-decoration-none"> {{ post.writer.get_email_domain }} </a><br>
-                                    <a class="text-decoration-none"> hits: {{ post.hits }} </a>/
+                                    <a class="text-decoration-none"> hits: {{ post.hits }} /</a>
                                     <a class="text-decoration-none"> likes: {{ post.get_like_count }} </a>
                                 </div>
                                 <hr>
                                 <div class="row text-center">
-                                    <a class="text-info text-decoration-none"
+                                    <a class="text-decoration-none" style="color: darkgrey; font-weight: bold;"
                                        href="{% url 'post-info' category_slug=post.category.slug post_id=post.id %}"> {{ post.get_title }} </a>
                                 </div>
                                 </p>

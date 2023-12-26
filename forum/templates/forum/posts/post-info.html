@@ -13,16 +13,16 @@
                             <button onclick="deletePost(this)" data-post-id="{{ post.id }}"
                                     data-category-slug="{{ category_slug }}" type="button"
                                     class="btn btn-outline-danger btn-sm">
-                                Delete
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         {% endif %}
                     </div>
-                    <div><h6 style="font-weight: bold; margin: 0;"> {{ post.title }} </h6></div>
+                    <div><h6 style="font-weight: bold; margin: 6px 0;"> {{ post.title }} </h6></div>
                     <div>
                         {% if post.writer == request.user %}
                             <a href="{% url 'update-post' category_slug=post.category.slug post_id=post.id %}">
-                                <button type="button" class="btn btn-outline-warning btn-sm">
-                                    &nbsp;&nbsp; Edit&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-primary btn-sm">
+                                    <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
                             </a>
                         {% endif %}
@@ -54,7 +54,7 @@
                 <div class="card-body" style="min-height: 600px;">
                     <p class="card-text">{{ post.content }}</p>
                 </div>
-                <hr>
+                <hr style="margin-top: 5px;">
                 <div class="row" style="justify-content: center;">
 
                     <a class="col-md-2 btn btn-sm" style="margin-right: 20px;"
@@ -68,9 +68,9 @@
                     <a class="col-md-2 btn btn-sm" style="margin-left: 20px;"
                        href="{% url 'emotion' post_id=post.id category_slug=category_slug like=0 %}">
                         {% if user_vote_info.has_disliked %}
-                        <i class="fa-solid fa-thumbs-down"></i> {{ post.get_dislike_count }}
+                            <i class="fa-solid fa-thumbs-down"></i> {{ post.get_dislike_count }}
                         {% else %}
-                        <i class="fa-regular fa-thumbs-down"></i> {{ post.get_dislike_count }}
+                            <i class="fa-regular fa-thumbs-down"></i> {{ post.get_dislike_count }}
                         {% endif %}
                     </a>
                 </div>
@@ -79,7 +79,7 @@
         </div>
 
         &nbsp;
-        <hr style="border: 1px solid grey; height: 635px; margin: 40px 0px 10px 10px;">
+        <hr style="border: 1px solid grey; height: 710px; margin: 40px 0px 10px 10px;">
         &nbsp;
 
         <div class="container" style="width: 400px;">
@@ -99,14 +99,14 @@
                     </a>
                 </div>
             </div>
-            <hr style="margin: 10px 0px 0 0; width: 400px;">
+            <hr style="margin: 10px 0px 0 0; width: 390px;">
 
             <div class="text-center" style="font-size: medium; font-weight: bold; margin-bottom: 5px;">
                 Comment
             </div>
 
-            <div class="card" style="width: 400px; max-height: 600px; align-self: center;">
-                <div class="card-body" style="min-height: 600px;">
+            <div class="card" style="width: 390px; max-height: 680px; align-self: center;">
+                <div class="card-body" style="min-height: 680px;">
                     <ul class="list-group">
                         {% for comment in comment_page %}
                             <li class="list-group-item">
@@ -114,16 +114,16 @@
                                     <div class="col-md-8">{{ comment.content }}</div>
                                     <div class="col-md-4 d-flex justify-content-end">
                                         {% if comment.commenter_id == request.user.id %}
-                                            <div class="btn-group" role="group">
-                                                <a class="btn btn-outline-danger btn-sm small"
-                                                   href="{% url 'delete-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
-                                                    d
-                                                </a>
-                                                <a class="btn btn-outline-warning btn-sm small"
-                                                   href="{% url 'update-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
-                                                    e
-                                                </a>
-                                            </div>
+                                            <a class="btn btn-outline-danger btn-sm"
+                                               onclick="deleteComment(this)"
+                                               href="{% url 'delete-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a class="btn btn-outline-primary btn-sm"
+                                               href="{% url 'update-comment' comment_id=comment.id post_id=post.id category_slug=category_slug %}">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -208,11 +208,14 @@
             var delete_confirm = confirm("Are you sure you want to delete the post?");
             var post_id = btn.getAttribute('data-post-id');
             var category_slug = btn.getAttribute('data-category-slug');
-            console.log(post_id)
             if (delete_confirm) {
-                var delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
-                window.location.href = delete_url;
+                var post_delete_url = `/${category_slug}/posts/${post_id}/delete-post`;
+                window.location.href = post_delete_url;
             }
+        }
+
+        function deleteComment(btn) {
+            var delete_confirm = confirm("Are you sure you want to delete the comment?");
         }
     </script>
 

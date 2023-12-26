@@ -6,8 +6,8 @@ from django.urls import reverse
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=150)
+    name = models.CharField(max_length=15, unique=True)
+    slug = models.SlugField(max_length=30)
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -22,7 +22,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=30)
     slug = models.SlugField(max_length=100)
     content = models.TextField()
     image = models.ImageField(upload_to="images/", blank=True, null=True)
@@ -65,7 +65,7 @@ class Post(models.Model):
         ).exists()
 
     def get_title(self):
-        return self.title[:30] + "..." if len(self.title) > 35 else self.title[:30]
+        return self.title[:20] + "..." if len(self.title) > 20 else self.title[:20]
 
 
 class Comment(models.Model):
