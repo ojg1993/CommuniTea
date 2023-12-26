@@ -1,3 +1,4 @@
+{% load static %}
 <style>
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-results-button,
@@ -18,7 +19,7 @@
         <div class="d-flex justify-content-between align-items-center w-100">
             <a class="navbar-brand" href="{% url 'home' %}">
                 <img style="height: 110px;"
-                     src="https://github.com/ojg1993/CommuniTea/assets/61238157/9a211dc3-4c42-4051-b01c-cb81e1094302">
+                     src="{% static 'media/images/CommuniTea logo.png' %}">
             </a>
 
             <form class="d-flex position-relative d-lg-flex d-none" role="search">
