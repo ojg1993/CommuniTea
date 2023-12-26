@@ -4,6 +4,11 @@
     input[type="search"]::-webkit-search-results-decoration {
         display: none;
     }
+
+    .dropdown-link:hover {
+        background-color: lightgray;
+    }
+
 </style>
 
 <nav class="navbar navbar-expand-lg bg-body-white">
@@ -27,35 +32,64 @@
             </form>
             &nbsp;
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
+            <div class="d-flex align-items-center">
+                <!-- Default menu -->
+                <ul class="navbar-nav d-none d-lg-flex">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: bold; width: 80px;" aria-current="page"
+                               href="{% url 'my-page' %}">My page</a>
+                        </li>
+                        &nbsp;
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: bold;"
+                               href="{% url 'user-logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: bold;" aria-current="page"
+                               href="{% url 'register' %}">Register</a>
+                        </li>
+                        &nbsp;
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: bold;"
+                               href="{% url 'user-login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold; width: 100px;" aria-current="page"
-                           href="{% url 'my-page' %}">My page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user-logout' %}">Logout</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold;" aria-current="page"
-                           href="{% url 'register' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" style="font-weight: bold;" href="{% url 'user-login' %}">Login</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+                <!-- Narrow page with dropdown menu -->
+                <div class="dropdown d-lg-none">
+                    <button class="navbar-toggler" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
+                    <div class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
+                        <ul class="navbar-nav">
+                            {% if user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link active dropdown-link" style="font-weight: bold;" aria-current="page"
+                                       href="{% url 'my-page' %}">My page</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active dropdown-link" style="font-weight: bold;"
+                                       href="{% url 'user-logout' %}">Logout</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link active dropdown-link" style="font-weight: bold;" aria-current="page"
+                                       href="{% url 'register' %}">Register</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active dropdown-link" style="font-weight: bold;" href="{% url 'user-login' %}">Login</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </nav>
@@ -63,13 +97,15 @@
 <div class="container-fluid" style="max-width: 1000px; height: 50px; min-width:600px;">
     <ul class="nav nav-underline d-flex justify-content-between">
         <li class="nav-item">
-            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug='all-post' %}">All Post</a>
+            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug='all-post' %}">All
+                Post</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug='best' %}">Best</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug='open-forum' %}">Open Forum</a>
+            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug='open-forum' %}">Open
+                Forum</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug="job" %}">Job</a>
@@ -81,16 +117,19 @@
             <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug="food" %}">Food</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug="travel" %}">Travel</a>
+            <a class="nav-link" style="color: black "
+               href="{% url 'category-posts' category_slug="travel" %}">Travel</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug="visa" %}">Visa</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" style="color: black " href="{% url 'category-posts' category_slug="hangout" %}">Hangout</a>
+            <a class="nav-link" style="color: black "
+               href="{% url 'category-posts' category_slug="hangout" %}">Hangout</a>
         </li>
 
     </ul>
 </div>
 <hr style="max-width: 1000px; margin-left: auto; margin-right: auto;">
 &nbsp;
+`
