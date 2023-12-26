@@ -11,6 +11,11 @@
         .form-group {
             margin-bottom: 15px;
         }
+
+        .search-input {
+            background-color: grey;
+            border: none;
+        }
     </style>
 
     <div class="container bg-white shadow-md p-5 form-layout" style="width: 480px;">
@@ -20,7 +25,7 @@
         <form method="POST" autocomplete="off" class="form-group justify-content-center">
             {% csrf_token %}
             <div class="d-flex justify-content-center">
-            {{ form|crispy }}
+                {{ form|crispy }}
             </div>
             <br>
             <button type="submit" class="btn btn-secondary navbar-btn text-white w-100 p-2">
