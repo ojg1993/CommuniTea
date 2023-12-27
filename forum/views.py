@@ -135,7 +135,7 @@ def create_post(request, category_slug=None):
     current_category = Category.objects.get(slug=category_slug)
     form = CreatePostForm(category=current_category)
     if request.method == "POST":
-        form = CreatePostForm(request.POST)
+        form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.writer = request.user
             form.save()
@@ -154,7 +154,7 @@ def update_post(request, post_id=None, category_slug=None):
     form = CreatePostForm(instance=cur_post)
 
     if request.method == "POST":
-        form = CreatePostForm(request.POST, instance=cur_post)
+        form = CreatePostForm(request.POST, request.FILES, instance=cur_post)
         if form.is_valid():
             edited_post = form.save(commit=False)
             edited_post.save()

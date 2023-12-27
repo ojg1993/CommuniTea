@@ -53,8 +53,15 @@
             <div class="card" style="width: 600px; align-self: center;">
                 <div class="card-body" style="min-height: 600px;">
                     <p class="card-text">{{ post.content }}</p>
+                    {% if post.image %}
+                        <br> <br>
+                        <div class="border text-center">
+                            <img src="{{ post.image.url }}" class="img-fluid" style="width: 400px; height: 225px;">
+                        </div>
+                    {% endif %}
                 </div>
                 <hr style="margin-top: 5px;">
+
                 <div class="row" style="justify-content: center;">
 
                     <a class="col-md-2 btn btn-sm" style="margin-right: 20px;"
@@ -114,8 +121,10 @@
                                     <div class="col-md-8">{{ comment.content }}</div>
                                     <div class="col-md-4 d-flex justify-content-end">
                                         {% if comment.commenter_id == request.user.id %}
-                                            <button onclick="deleteComment(this)" data-category-slug="{{ category_slug }}"
-                                                    data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}" type="button"
+                                            <button onclick="deleteComment(this)"
+                                                    data-category-slug="{{ category_slug }}"
+                                                    data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}"
+                                                    type="button"
                                                     class="btn btn-outline-danger btn-sm">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
@@ -219,8 +228,8 @@
             var category_slug = btn.getAttribute('data-category-slug');
             var post_id = btn.getAttribute('data-post-id');
             var comment_id = btn.getAttribute('data-comment-id');
-            if(delete_confirm){
-                var comment_delete_url =`/${category_slug}/posts/${post_id}/delete-comment/${comment_id}`;
+            if (delete_confirm) {
+                var comment_delete_url = `/${category_slug}/posts/${post_id}/delete-comment/${comment_id}`;
                 window.location.href = comment_delete_url;
             }
         }
