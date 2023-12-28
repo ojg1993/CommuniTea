@@ -15,7 +15,7 @@ CommuniTea is a community platform designed for immigrants residing in the Unite
 
 ### Data Modeling
 
-![datamodeling](https://github.com/ojg1993/CommuniTea/assets/61238157/c19a8784-77e9-4dd5-bd90-39d9a9c1d251)
+![data modeling](https://github.com/ojg1993/CommuniTea/assets/61238157/02e2ece8-228b-4671-b984-d0ccfc2dba92)
 
 ### UI/UX Prototype Design
 
