@@ -26,7 +26,7 @@ diagram position
 
 ### Data Modeling
 
-![datamodeling](https://github.com/ojg1993/CommuniTea/assets/61238157/c19a8784-77e9-4dd5-bd90-39d9a9c1d251)
+![data modeling](https://github.com/ojg1993/CommuniTea/assets/61238157/47c803b0-89c0-470c-bd13-3f9cc1927030)
 
 ### UI/UX Prototype Design
 
