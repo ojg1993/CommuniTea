@@ -22,9 +22,9 @@
                      src="{% static 'media/images/CommuniTea logo.png' %}">
             </a>
 
-            <form class="d-flex position-relative d-lg-flex d-none" role="search">
+            <form class="d-flex position-relative d-lg-flex d-none" method="GET" action="{% url 'search' %}">
                 <input class="form-control me-2 search-input" style="width: 500px; text-align: center;" type="search"
-                       placeholder="Search">
+                       name="query" placeholder="Search">
                 <button class="btn position-absolute" type="submit" style="right: 0; top: 0; border: none;">
                     <i class="material-icons" style="vertical-align: middle;">
                         search

@@ -1,0 +1,97 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .album {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+    </style>
+    <body>
+    <div class="container-fluid px-4" style="max-width: 1000px;">
+
+        <div class="card mb-4">
+
+            <div class="card-header text-center">
+                <a class="fs-3" style="font-weight: bold; color: black;">Search results</a>
+            </div>
+
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr class="text-center row">
+                        <th class="col-7">Title</th>
+                        <th class="col-1">Writer</th>
+                        <th class="col-2">Posted</th>
+                        <th class="col-1">Likes</th>
+                        <th class="col-1">Hits</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for post in page %}
+                        <tr class="text-center row">
+                            <td class="col-7">
+                                <a style="color: darkgrey; font-weight: bold;" href="
+                                    {% if category.slug %}
+                                        {% url 'post-info' category_slug=category.slug post_id=post.id %}
+                                    {% else %}
+                                        {% url 'post-info' category_slug=post.category.slug post_id=post.id %}
+                                    {% endif %}">
+                                    {{ post.get_title }}
+                                </a>
+                            </td>
+                            <td class="col-1"><a> {{ post.writer.get_email_domain }} </a></td>
+                            <td class="col-2"><a> {{ post.created_at|date:"d/m/y" }} </a></td>
+                            <td class="col-1"><a> {{ post.get_like_count }} </a></td>
+                            <td class="col-1"><a> {{ post.hits }} </a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <nav class="d-flex position-relative">
+        <div style="height: 20px;">
+            <ul class="pagination position-absolute top-50 start-50 translate-middle">
+                <li class="page-item">
+                    <a class="page-link {% if page.number == 1 %}disabled{% endif %}" href="{% url 'search' %}?{{ current_url_params }}&page=1" aria-label="First">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link {% if not page.has_previous %}disabled{% endif %}"
+                       href="{% if page.has_previous %}{% url 'search' %}?{{ current_url_params }}&page={{ page.previous_page_number }}{% endif %}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+
+                {% for num in page_range %}
+                    {% if num == page.number %}
+                        <li class="page-item {% if num == page.number %}active{% endif %}">
+                            <a class="page-link">{{ num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'search' %}?{{ current_url_params }}&page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item">
+                    <a class="page-link {% if not page.has_next %}disabled{% endif %}"
+                       href="{% if page.has_next %}{% url 'search' %}?{{ current_url_params }}&page={{ page.next_page_number }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link {% if page.number == page.paginator.num_pages %}disabled{% endif %}"
+                       href="{% url 'search' %}?{{ current_url_params }}&page={{ page.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    </body>
+{% endblock %}

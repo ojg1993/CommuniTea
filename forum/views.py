@@ -1,4 +1,3 @@
-# RESTful API
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
@@ -21,22 +20,73 @@ def home(request):
     return render(request, "forum/index.html", context=context)
 
 
+def search_post(request):
+    search_keyword = request.GET.get('query', '')
+    if len(search_keyword) < 2:
+        messages.warning(request, 'Input 2 or more characters to search posts.')
+        return redirect('home')
+    else:
+        searched_posts = (Post.objects
+                          .filter(Q(title__icontains=search_keyword) |
+                                  Q(content__icontains=search_keyword) |
+                                  Q(writer__email__icontains=search_keyword))
+                          .order_by("-id"))
+
+        if searched_posts.exists():
+            paginated = Paginator(searched_posts, 12)
+            page_number = request.GET.get("page")
+
+            try:
+                current_page = paginated.page(page_number)
+
+            except PageNotAnInteger:
+                current_page = paginated.page(1)
+
+            except EmptyPage:
+                current_page = paginated.page(paginated.num_pages)
+
+            page_numbers_range = 10
+            max_index = len(paginated.page_range)
+
+            start_index = (
+                    int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+            )
+            end_index = start_index + page_numbers_range
+            if end_index >= max_index:
+                end_index = max_index
+
+            page_range = paginated.page_range[start_index:end_index]
+
+            current_url_params = request.GET.copy()
+            current_url_params.pop('page', None)
+            current_url_params['query'] = search_keyword
+            context = {
+                "page": current_page,
+                "page_range": page_range,
+                "current_url_params": current_url_params.urlencode(),
+            }
+            return render(request, "forum/posts/search-post.html", context=context)
+        else:
+            messages.warning(request, 'No posts found with the given search criteria.')
+            return redirect('home')
+
+
 def category_posts(request, category_slug=None):
     # Categorised posts
     if category_slug not in ["all-post", "best"]:
         category = get_object_or_404(Category, slug=category_slug)
-        posts = Post.objects.filter(category=category)
+        posts = Post.objects.filter(category=category).order_by("-id")
 
     # Not categorised posts
     else:
         if category_slug == "all-post":
             category = "all-post"
-            posts = Post.objects.all()
+            posts = Post.objects.all().order_by("-id")
         elif category_slug == "best":
             category = "best"
             posts = Post.objects.annotate(
                 like_count=Count("post_emotion", filter=Q(post_emotion__like=True))
-            ).order_by("-like_count")[:48]
+            ).order_by("-like_count", "-hits", "-id")[:48]
 
     # Pagination
     paginated = Paginator(posts, 12)
@@ -59,7 +109,7 @@ def category_posts(request, category_slug=None):
     max_index = len(paginated.page_range)
 
     start_index = (
-        int((current_page.number - 1) / page_numbers_range) * page_numbers_range
+            int((current_page.number - 1) / page_numbers_range) * page_numbers_range
     )
     end_index = start_index + page_numbers_range
     if end_index >= max_index:
@@ -69,7 +119,6 @@ def category_posts(request, category_slug=None):
 
     context = {
         "category": category,
-        "posts": posts,
         "page": current_page,
         "page_range": page_range,
     }

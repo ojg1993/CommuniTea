@@ -3,9 +3,10 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("<slug:category_slug>/posts", views.category_posts, name="category-posts"),
-    # Post CRUD, Comment R
+    path("search", views.search_post, name="search"),
+    # Post CRUD
     path("<slug:category_slug>/create-post", views.create_post, name="create-post"),
+    path("<slug:category_slug>/posts", views.category_posts, name="category-posts"),
     path("<slug:category_slug>/posts/<int:post_id>", views.post_info, name="post-info"),
     path(
         "<slug:category_slug>/posts/<int:post_id>/update-post",
@@ -28,7 +29,7 @@ urlpatterns = [
         views.next_post,
         name="next-post",
     ),
-    # Comment CUD
+    # Comment CRUD
     path(
         "<slug:category_slug>/posts/<int:post_id>/create-comment",
         views.create_comment,
