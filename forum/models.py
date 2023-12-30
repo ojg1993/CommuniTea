@@ -38,7 +38,7 @@ class Post(models.Model):
 
     def increase_hits(self):
         self.hits += 1
-        self.save()
+        self.save(update_fields=['hits'])
 
     def __str__(self):
         return f"[{str(self.category)}] {self.title}"
