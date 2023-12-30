@@ -34,7 +34,9 @@ def register(request):
     if request.method == "POST":
         form = forms.RegisterUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
 
             current_site = get_current_site(request)
             link = f"{request.scheme}://{current_site.domain}"
