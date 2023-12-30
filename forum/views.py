@@ -128,6 +128,16 @@ def category_posts(request, category_slug=None):
 def post_info(request, category_slug=None, post_id=None):
     cur_category = Category.objects.get(slug=category_slug)
     post = get_object_or_404(Post, id=post_id)
+
+    time_diff = post.modified_at - post.created_at
+    time_difference_seconds = time_diff.total_seconds()
+
+    if time_difference_seconds > 1:
+        post_edited = True
+    else:
+        post_edited = False
+
+
     comments = Comment.objects.filter(post_id=post_id).order_by("-created_at")
 
     paginated = Paginator(comments, 7)
@@ -165,6 +175,7 @@ def post_info(request, category_slug=None, post_id=None):
 
     context = {
         "post": post,
+        "post_edited": post_edited,
         "category_slug": category_slug,
         "form": form,
         "comment_page": current_page,
