@@ -140,7 +140,7 @@ def post_info(request, category_slug=None, post_id=None):
 
     comments = Comment.objects.filter(post_id=post_id).order_by("-created_at")
 
-    paginated = Paginator(comments, 7)
+    paginated = Paginator(comments, 8)
     page_number = request.GET.get("page")
 
     try:
