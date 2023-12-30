@@ -186,7 +186,11 @@ def post_info(request, category_slug=None, post_id=None):
         context["has_previous_post"] = True
     if Post.objects.filter(category=cur_category.id, id__gt=post_id):
         context["has_next_post"] = True
-    post.increase_hits()
+
+    if 'hit_applied' not in request.session:
+        post.increase_hits()
+        request.session['hit_applied'] = True
+
     return render(request, "forum/posts/post-info.html", context=context)
 
 
