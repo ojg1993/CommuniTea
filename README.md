@@ -89,7 +89,7 @@ Watch a quick demonstration of CommuniTea in action !
 ## Challenges & Solutions
 During the development of this project, I faced some issues that needed careful solutions. Here, sharing the main difficulties encountered and the strategies used to overcome them.
 
-### Challenge 1: [Anonymous User displayed in templates after successful Login]
+### Challenge 1 - [Anonymous User displayed in templates after successful Login]
 
 ### Problem Description:
 After implementing an email-based login using a custom user model (AbstractUser), BaseUserManager, and a custom ModelBackend, an issue emerged. Upon successful login, the ***template displayed {{ request.user }} as an anonymous user***.
@@ -108,7 +108,7 @@ In a breakthrough moment, I carefully reviewed the methods provided by ModelBack
 ### Conclusion:
 The journey involved a detailed examination of different components, ultimately leading to the realisation that the solution lay in customizing the ModelBackend's get_user method. Despite initial challenges and extensive research, grasping the details of the authentication backend proved crucial in achieving success.
 
-### Challenge 2: [Designing backend system architecture]
+### Challenge 2 - [Designing backend system architecture]
 
 ### Problem Description:
 In the deployment phase of my application, I encountered confusion regarding the roles of Web server, WSGI server, and App server. The detailed aspects of their responsibilities, particularly the communication flow involving Nginx, Gurnicorn, and Django app, needed clarification. Additionally, my goal was to containerize the application using Docker and deploy it through AWS Elastic Beanstalk. However, the automatic setups done by AWS Elastic Beanstalk were unclear to me. The deployment process seemed overwhelming, leading to research through Google searches and references to alternative architectures.
@@ -129,7 +129,7 @@ In the deployment phase of my application, I encountered confusion regarding the
 The exploration of server roles and the deployment process, which involves AWS Elastic Beanstalk and Docker, played a pivotal role in simplifying the details of application deployment. Understanding the communication flow and utilizing Docker in conjunction with the user-friendly features of AWS Elastic Beanstalk contributed to a more straightforward deployment experience.
 
 
-### Challenge 3: [Automating Docker deploymen with Gihub Actions]
+### Challenge 3 - [Automating Docker & AWS EB deployment with Gihub Actions]
 
 ### Problem Description:
 I wanted to automate the deployment of my Dockerised application using Github Actions, I faced several challenges as below.
