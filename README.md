@@ -42,7 +42,7 @@ Watch a quick demonstration of CommuniTea in action !
 - **Frontend:** HTML, CSS, Bootstrap, Django, Javascript
 - **Backend:** Django
 - **Database:** PostgreSQL
-- **Deployment:** Git Actions, Docker, AWS Elastic Beanstalk
+- **Deployment:** Github Actions, Docker, AWS Elastic Beanstalk
 - **Version Control:** Git, Github
 
 ### Backend System Architecture
