@@ -39,9 +39,9 @@ Watch a quick demonstration of CommuniTea in action !
 ## Project Overview
 ### Tech Stack
 
+- **UI/UX Design:** Figma
 - **Frontend:** HTML, CSS, Bootstrap, Django, Javascript
-- **Backend:** Django
-- **Database:** PostgreSQL
+- **Backend:** Django, AWS S3, AWS RDS(PostgreSQL)
 - **Deployment:** Github Actions, Docker, AWS Elastic Beanstalk
 - **Version Control:** Git, Github
 
